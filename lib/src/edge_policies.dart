@@ -22,13 +22,12 @@ mixin ToroidalEdges on Grid {
 
 /// The grid has hard walls — off-grid neighbors simply don't exist, so
 /// edge and corner cells have fewer than 8 neighbors.
+///
+/// TODO: implement, following the pattern of [ToroidalEdges] above, but
+/// skip any candidate neighbor that falls outside `[0, width) x [0, height)`
+/// instead of wrapping it.
 mixin WalledEdges on Grid {
   Iterable<Point<int>> neighborsOf(Point<int> cell) sync* {
-    for (final o in _moore) {
-      final p = Point(cell.x + o.x, cell.y + o.y);
-      if (p.x >= 0 && p.x < width && p.y >= 0 && p.y < height) {
-        yield p;
-      }
-    }
+    throw UnimplementedError();
   }
 }

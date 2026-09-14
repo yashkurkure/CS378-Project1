@@ -19,12 +19,15 @@ mixin AsciiRenderable on Grid {
 /// Wraps whatever `render()` produced in an ANSI color that cycles with
 /// the generation counter. Must be mixed in *after* a mixin that already
 /// implements `render()` (e.g. `AsciiRenderable`) — it calls `super.render()`.
+///
+/// TODO: implement. Pick a color from `_palette` using `generation`, and
+/// return it concatenated with `super.render()` and a reset code
+/// (`\x1B[0m`) at the end. If you mix this in *before* `AsciiRenderable`
+/// instead of after, think about what `super.render()` resolves to —
+/// try it and see what breaks.
 mixin ColorRenderable on CellularAutomaton {
   static const _palette = ['\x1B[36m', '\x1B[35m', '\x1B[33m', '\x1B[32m'];
 
   @override
-  String render() {
-    final color = _palette[generation % _palette.length];
-    return '$color${super.render()}\x1B[0m';
-  }
+  String render() => throw UnimplementedError();
 }
