@@ -82,10 +82,10 @@ rough spec of the project.
    cells have fewer.
 
 6. A mixin `AsciiRenderable` implements `render()` as text, with `#` for
-   alive cells and `.` for dead cells. A second mixin, `ColorRenderable`,
+   alive cells and `.` for dead cells. A second mixin, `DecoratedRenderable`,
    decorates another mixin's `render()` output (via `super.render()`)
    rather than reimplementing it, and depends on mixin order — for
-   example, wrapping `AsciiRenderable`'s output in an ANSI color code.
+   example, wrapping `AsciiRenderable`'s output in an ANSI color code or adding a border to the rendered board.
 
 7. A mixin `Trackable` overrides `step()` to record the board's
    `population` at each generation, calling `super.step()` so the
