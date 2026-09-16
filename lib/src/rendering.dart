@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'cell.dart';
 import 'cellular_automaton.dart';
 import 'grid.dart';
 
@@ -8,7 +7,7 @@ mixin AsciiRenderable on Grid {
     final buf = StringBuffer();
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
-        buf.write(isAlive(Point(x, y)) ? '█' : '·');
+        buf.write(isAlive(Cell(x: x, y: y)) ? '█' : '·');
       }
       buf.writeln();
     }

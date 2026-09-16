@@ -7,8 +7,17 @@ simulation, entirely through `with` composition.
 
 ## Setup
 
+This project needs the `args` package (for the CLI) and the `test`
+package (for `dart test`). Add them yourself:
+
 ```bash
-dart pub get
+dart pub add args
+dart pub add dev:test
+```
+
+Then run the suite:
+
+```bash
 dart test        # currently: 7 passing, 10 failing on your TODOs
 ```
 
@@ -28,20 +37,20 @@ runnable program while you work.
 Read the worked examples first — each TODO follows the same shape as the
 example already sitting next to it in the same file.
 
-`lib/src/grid.dart`, `lib/src/cellular_automaton.dart`, and everything in
-`bin/` are fully given; you shouldn't need to modify them.
+`lib/src/cell.dart`, `lib/src/grid.dart`, `lib/src/cellular_automaton.dart`,
+and everything in `bin/` are fully given; you shouldn't need to modify them.
 
 ## Running it
 
 ```bash
-dart run bin/dart_mixins.dart --species=conway --student=yourname
+dart run bin/cellular_automaton.dart --species=conway --student=yourname
 ```
 
 `--species` picks a pre-composed mixin combo (`conway`, `highlife`,
-`daynight`, `seeds` — see `bin/dart_mixins.dart` for exactly which
+`daynight`, `seeds` — see `bin/cellular_automaton.dart` for exactly which
 mixins each one uses). `--student` seeds your starting board — same
 input always gives you the same board, but it'll differ from your
-classmates'. Full flag list in `bin/dart_mixins.dart`.
+classmates'. Full flag list in `bin/cellular_automaton.dart`.
 
 ## Grading
 

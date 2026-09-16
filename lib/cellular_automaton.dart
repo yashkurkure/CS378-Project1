@@ -3,6 +3,7 @@
 /// later, the Flutter app.
 library;
 
+export 'src/cell.dart';
 export 'src/cellular_automaton.dart';
 export 'src/edge_policies.dart';
 export 'src/grid.dart';

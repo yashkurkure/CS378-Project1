@@ -10,8 +10,10 @@
 # 'package:lints/core.yaml'. These are just the most critical lints
 # (the recommended set includes the core lints).
 # The core lints are also what is used by pub.dev for scoring packages.
-
-include: package:lints/recommended.yaml
+#
+# Uncomment this once you've added the `lints` package
+# (`dart pub add dev:lints`):
+# include: package:lints/recommended.yaml
 
 # Uncomment the following section to specify additional rules.
 

@@ -1,6 +1,4 @@
-import 'dart:math';
-
-import 'package:dart_mixins/dart_mixins.dart';
+import 'package:cellular_automaton/cellular_automaton.dart';
 import 'package:test/test.dart';
 
 // Pure functions of (alive, neighborCount) — no `on` clause needed, so we
@@ -52,28 +50,29 @@ void main() {
   group('ToroidalEdges', () {
     final g = _ToroidalHarness(3, 3);
     test('corner has all 8 neighbors, wrapped', () {
-      final ns = g.neighborsOf(const Point(0, 0)).toSet();
+      final ns = g.neighborsOf(const Cell(x: 0, y: 0)).toSet();
       expect(ns, hasLength(8));
-      expect(ns, contains(const Point(2, 2))); // wraps around
+      expect(ns, contains(const Cell(x: 2, y: 2))); // wraps around
     });
   });
 
   group('WalledEdges', () {
     final g = _WalledHarness(3, 3);
     test('corner only has 3 neighbors', () {
-      final ns = g.neighborsOf(const Point(0, 0)).toSet();
+      final ns = g.neighborsOf(const Cell(x: 0, y: 0)).toSet();
       expect(ns, hasLength(3));
-      expect(ns, isNot(contains(const Point(2, 2))));
+      expect(ns, isNot(contains(const Cell(x: 2, y: 2))));
     });
   });
 
   group('blinker oscillator (Conway, walled)', () {
     test('period-2 oscillation', () {
       final sim = _BlinkerSim(5, 5)
-        ..seed(const [Point(1, 2), Point(2, 2), Point(3, 2)]);
+        ..seed(const [Cell(x: 1, y: 2), Cell(x: 2, y: 2), Cell(x: 3, y: 2)]);
       final gen0 = sim.alive.toSet();
       sim.step();
-      expect(sim.alive, unorderedEquals(const [Point(2, 1), Point(2, 2), Point(2, 3)]));
+      expect(sim.alive,
+          unorderedEquals(const [Cell(x: 2, y: 1), Cell(x: 2, y: 2), Cell(x: 2, y: 3)]));
       sim.step();
       expect(sim.alive, unorderedEquals(gen0));
     });

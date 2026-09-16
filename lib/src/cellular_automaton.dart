@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'cell.dart';
 import 'grid.dart';
 
 /// Defines the three extension points that mixins are responsible for:
@@ -17,14 +16,14 @@ abstract class CellularAutomaton extends Grid {
 
   CellularAutomaton(super.width, super.height);
 
-  Iterable<Point<int>> neighborsOf(Point<int> cell);
+  Iterable<Cell> neighborsOf(Cell cell);
 
   bool nextState(bool currentlyAlive, int liveNeighbors);
 
   String render();
 
   void step() {
-    final next = <Point<int>>{};
+    final next = <Cell>{};
     for (final cell in allCells) {
       final liveNeighbors = neighborsOf(cell).where(isAlive).length;
       if (nextState(isAlive(cell), liveNeighbors)) {

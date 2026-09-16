@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'cell.dart';
 
 /// A sparse grid: only alive cells are stored. Cells outside
 /// `[0, width) x [0, height)` are never stored here — how they're treated
@@ -7,21 +7,21 @@ import 'dart:math';
 class Grid {
   final int width;
   final int height;
-  final Set<Point<int>> alive = <Point<int>>{};
+  final Set<Cell> alive = <Cell>{};
 
   Grid(this.width, this.height);
 
-  bool isAlive(Point<int> cell) => alive.contains(cell);
+  bool isAlive(Cell cell) => alive.contains(cell);
 
-  void seed(Iterable<Point<int>> cells) => alive.addAll(cells);
+  void seed(Iterable<Cell> cells) => alive.addAll(cells);
 
   int get population => alive.length;
 
   /// Every coordinate in the grid, row by row.
-  Iterable<Point<int>> get allCells sync* {
+  Iterable<Cell> get allCells sync* {
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
-        yield Point(x, y);
+        yield Cell(x: x, y: y);
       }
     }
   }
