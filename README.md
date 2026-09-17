@@ -59,13 +59,13 @@ two abstract methods: (1) `bool nextState(bool currentlyAlive, int liveNeighborC
 
 6. A mixin `DecoratedRenderable` that has access to the members of `CellularAutomaton` class (HINT: using the `on` keyword). It implements a single `String render()` method, however it overrides the default `render()` methods and uses the `super` keyword to retrieve the raw string representing the board. It then modifies this string by adding a border to the grid using `|` and `-` characters.
 
-7. You must also implement error handling wherever necessary. For example: If your Grid class contains an `isAlive(Cell cell)` method to get the state of a cell, an error must be thrown if the cell does not exist on the grid.
+7. You must also implement error handling wherever necessary. For example: If your Grid class contains an `isAlive(Cell cell)` method to get the state of a cell, an error must be thrown if the cell does not exist on the grid.t
 
-Given that you have implemented this Spec, some starter code is offered to you which implements a command line interface and code to animate the board onto the command line described below and available in the repository under the `bin` and `lib` folders.
+Given that you have implemented this Spec, some starter code is offered to you which implements a command line interface and code to animate the board onto the command line described below and available in the repository under the `bin` and `lib` and `test` folders. 
 
 ## Starter code
 
-You are given two things:
+You are given three things:
 
 - `lib/cellular_automaton.dart`, a barrel file that exports every
   file under `lib/src/` (`grid.dart`, `cell.dart`,
@@ -75,6 +75,8 @@ You are given two things:
   above, is your job.
 
 - `bin/cellular_automaton.dart`, contains a complete command line application (CLI) and an example of how the classes and mixins you write come together. You should not need to modify this file — but it also won't compile until the classes and mixins it references actually exist in `lib/src/`.
+
+- `test/`, contains a single test file `cli_test.dart` which tests the CLI. These tests can be run using the `dart test` command. If the above spec is followed, this test should pass.
 
 ### Working in Android Studio
 
@@ -106,7 +108,7 @@ dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --g
 1. A PDF file `spec.pdf` describing your refined spec of the rough spec above. Spell out the exact signature of every method, class and mixin (include the details of using the `on` keyword where required and where it is not).
 
 2. The Dart code implementing your refined spec, plus tests under `test/`
-runnable with `dart test`. Some sample tests are given that test the CLI for your reference on how tests are implemented using dart's `test` package.
+runnable with `dart test`. Some sample tests are given that test the CLI for your reference on how tests are implemented using dart's `test` package. We should be able to run the tests using the `dart test` command.
 
 3. A screen recorded video `tutorial.mp4`, at most 120 seconds. In the video you will code live by adding a new mixin called `CustomRules` to the `rules.dart`. The mixin would be similar to `ConwayRules` but implement a rule of your choice. Then you will modify the `CLI` appropriately so that the following command will run your custom animation:
 
