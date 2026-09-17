@@ -34,13 +34,24 @@ In a 2D grid, each cell has 8 neighbors, except the ones at the border of the gr
 ## Spec
 
 1. A class `Grid` holds a rectangular board of alive/dead cells. It defines
-a single constructor with required named parameters `width` and `height`. This class is responsible for the board's state at each timestep; the internal data structures used to track which cells are alive are up to you. It should also include a getter method `get population` which returns the count of cells that are alive.
+a single constructor with required named parameters `int width`, `int height` and `int seed`. This class is responsible for the board's state at each timestep; the internal data structures used to track which cells are alive are up to you. It should also include a getter method `get population` which returns the count of cells that are alive. You must make sure the intital state of the grid has some alive cells, this greatly affects the simulation. The `seed` argument acepts an integer that acts a seed for a random generator. Use the `dart:math` package with and create a random number generator that initializes the board state. Example usage:
+```
+  int customSeed = 42;
+  
+  // Create a Random instance with the seed
+  var random = Random(customSeed);
+  
+  // Generate a random integer from 0 (inclusive) up to 2 (exclusive), which gives 0 or 1
+  int randomNumber = random.nextInt(2);
+  
+  print('Random 0 or 1: $randomNumber');
+```
 
 2. A class `Cell` that encodes the coordinates of a cell within the grid.
 It defines a single constructor with required named parameters `x` and `y`. It must override `==` so cells can be compared, and should override `hashCode` if you use a `Set` or `Map` to track alive cells.
 
 3. An abstract subclass `CellularAutomaton extends Grid` which declares
-two abstract methods: (1) `bool nextState(bool currentlyAlive, int liveNeighborCount)` and (2) `String render()`. It also implements one concrete `step()` method that advances the grid to its next state using `neighborsOf` and `nextState`.
+two abstract methods: (1) `bool nextState(bool currentlyAlive, int liveNeighborCount)` and (2) `String render()`. It also implements one concrete `step()` method that advances the grid to its next state and increments a public class member called `int generation` after every step is taken.
 
 4. A mixin `ConwayRules` that implements a single method `bool nextState(bool currentlyAlive, int liveNeighborCount)`. It takes the current state of a cell encoded as a boolean (true for alive and false for dead) and the count of neighbors which are alive. Based on these values the method returns a boolean indicating whether the cell should stay alive (true) or die (false) in the next timestep.
 
