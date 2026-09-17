@@ -7,8 +7,6 @@ Below is an example of what one may look like:
 
 ![Cellular automaton animation](cellular_automaton.gif)
 
-## Background
-
 In the 2D grid, each cell is either alive or dead. In the animation above,
 a cell is colored black if alive and white if dead. Simple rules like the
 following govern the animation:
@@ -22,167 +20,114 @@ following govern the animation:
 4. Any dead cell with exactly three live neighbors becomes alive (as if by
    reproduction).
 
-This is [Conway's Game of Life](https://youtu.be/R9Plq-D1gEk?si=x4bpcwctv4KS1e9b).
+This is also called the [Conway's Game of Life](https://youtu.be/R9Plq-D1gEk?si=x4bpcwctv4KS1e9b) devised by the mathematician John Conway.
 
 At each timestep, the program iterates over the grid and computes the next
 state based on the rules above. The rules can also be denoted with the
 shorthand **B3/S23**, where B stands for Birth and S stands for Survival:
 a dead cell becomes alive if it has exactly 3 neighbors (B3), and a living
 cell stays alive if it has 2 or 3 neighbors (S23). Changing the B/S numbers
-produces different variants of the same game. You will implement:
+produces different patterns with interesting properties. You may find some rules online and test out if those properties truly hold.
 
-- B3/S23 (Conway's Rule)
-- B36/S23 (HighLife)
-- B3678/S34678 (Day and Night)
-- B2/S (Seeds)
+In a 2D gird, each cell has 8 neightbors, except the ones at the border of the grid. Where the corner cells have 3 neightbors and the the cells on the edges have 5. In your implementation you will asume these properties. The following section describes a rough spec you will follow:
 
-A cell's neighbor count depends on how the grid's edges are handled, since
-not every cell in the grid has the same number of neighbors. You will
-implement two ways of considering neighbors:
 
-1. **Walled edges** — corners have three neighbors, edges have six.
-2. **Toroidal edges** — the grid wraps around to the other side, so every
-   cell has eight neighbors.
-
-A plethora of different animations can be produced just by changing the
-grid size, the rule set, and the edge policy. The goal of this assignment
-is to cleanly implement every swappable piece of behavior — rule sets,
-edge handling, rendering, stats — as a Dart mixin, and to assemble a final
-simulation class purely by choosing which mixins to compose. Here is a
-rough spec of the project.
-
-## Rough spec
+## Spec
 
 1. A class `Grid` holds a rectangular board of alive/dead cells. It defines
-   a single constructor with required named parameters `width` and
-   `height`. This class is responsible for the board's state at each
-   timestep; the internal data structures used to track which cells are
-   alive are up to you.
+a single constructor with required named parameters `width` and `height`. This class is responsible for the board's state at each timestep; the internal data structures used to track which cells are alive are up to you. It should also include a getter method `get population` which returns the count of cells that are alive.
 
 2. A class `Cell` that encodes the coordinates of a cell within the grid.
-   It defines a single constructor with required named parameters `x` and
-   `y`. It must override `==` so cells can be compared, and should override
-   `hashCode` if you use a `Set` or `Map` to track alive cells.
+It defines a single constructor with required named parameters `x` and `y`. It must override `==` so cells can be compared, and should override `hashCode` if you use a `Set` or `Map` to track alive cells.
 
 3. An abstract subclass `CellularAutomaton extends Grid` which declares
-   three abstract methods: (1) `Iterable<Cell> neighborsOf(Cell cell)`,
-   (2) `bool nextState(bool currentlyAlive, int liveNeighborCount)`, and
-   (3) `String render()`. It also implements a concrete `step()` method
-   that advances the grid to its next state using `neighborsOf` and
-   `nextState`.
+two abstract methods: (1) `bool nextState(bool currentlyAlive, int liveNeighborCount)` and (2) `String render()`. It also implements one concrete `step()` method that advances the grid to its next state using `neighborsOf` and `nextState`.
 
-4. Four mixins — `ConwayRules`, `HighLifeRules`, `DayAndNightRules`,
-   `SeedsRules` — each implementing `nextState` per one of the B/S rules
-   above. These take no superclass constraint; they are pure functions of
-   a cell's state and neighbor count.
+4. A mixin `ConwayRules` that implements a single method `bool nextState(bool currentlyAlive, int liveNeighborCount)`. It takes the current state of a cell encoded as a boolean (true for alive and false for dead) and the count of neighbors which are alive. Based on these values the method returns a boolean indicating whether the cell should stay alive (true) or die (false) in the next timestemp.
 
-5. Two mixins, `ToroidalEdges` and `WalledEdges`, each implementing
-   `neighborsOf`: one wraps at the board's edges so every cell has 8
-   neighbors, the other excludes off-board neighbors so edge and corner
-   cells have fewer.
+5. A mixin `AsciiRenderable` that has access to the members of the `Grid` class allowing it to access the sate of the baord (HINT: using the `on` keyword). It implements a single `String render()` method which returns a string of characters represnting the cells of the grid. Use `#` for alive cells and `.` for dead cells. Make sure newlines are inserted at appropriate places in the string.
 
-6. A mixin `AsciiRenderable` implements `render()` as text, with `#` for
-   alive cells and `.` for dead cells. A second mixin, `DecoratedRenderable`,
-   decorates another mixin's `render()` output (via `super.render()`)
-   rather than reimplementing it, and depends on mixin order — for
-   example, wrapping `AsciiRenderable`'s output in an ANSI color code or adding a border to the rendered board.
+6. A mixin `DecoratedRenderable` that has access to the members of `CellularAutomaton` class (HINT: using the `on` keyword). It implements a single `String render()`method, however it overrides the default `render()` methods and uses the `super` keyword to retrive the raw string representing the baord. It then modfies this string by adding a border to the grid using `|` and `-` characters.
 
-7. A mixin `Trackable` overrides `step()` to record the board's
-   `population` at each generation, calling `super.step()` so the
-   simulation logic still executes.
+7. You must also imeplement error handling where ever necessary. For example: If your Grid class contains an `isAlive(Cell cell)` method to get the state of a cell, a error must be thrown if the cell does not exist on the grid.
 
-Exact method signatures, constructor shapes, and behavior for erroneous
-input are yours to pin down in your refined spec — the implementation
-details are up to you as long as the mixin contracts above hold.
+Given that you have implemented this Spec, some starter code is offered to you which imeplements a command line interface and code to animate the baord onto the command line described below and avaiable in the repository under the `\bin` and `lib` folders.
 
 ## Starter code
 
-You are given only two things:
+You are given two things:
 
-- `lib/cellular_automaton.dart`, a barrel file that already exports every
-  file under `lib/src/` (`cell.dart`, `grid.dart`,
-  `cellular_automaton.dart`, `edge_policies.dart`, `rules.dart`,
-  `rendering.dart`, `stats.dart`). Each of those files is completely
-  empty — implementing every class and mixin in them, per the rough spec
+- `lib/cellular_automaton.dart`, a barrel file that exports every
+  file under `lib/src/` (`grid.dart`, `cell.dart`,
+  `cellular_automaton.dart`, `rules.dart`,
+  `rendering.dart`). Each of the files under `lib/src/` is completely
+  empty and implementing every class and mixin in them, per the spec
   above, is your job.
-- `bin/cellular_automaton.dart`, a complete command-line application that
-  imports the `cellular_automaton` package, composes the four required
-  species out of the mixins you will write, and handles argument parsing,
-  seeding, and printing the animation to the terminal. You should not
-  need to modify this file — but it also won't compile until the classes
-  and mixins it references actually exist in `lib/src/`.
 
-The project uses the `args` package for the CLI. You will need to add it
-to the project yourself using `dart pub add`, and add `test` yourself
-once you start writing your own tests:
+- `bin/cellular_automaton.dart`, contains a complete command line application (CLI) and an example of how the classes and mixins you write come together. You should not need to modify this file — but it also won't compile until the classes and mixins it references actually exist in `lib/src/`.
+
+### Working in Android Studio
+
+1. Install the **Dart** and **Flutter** plugins (Example: Settings/Preferences → Plugins → search "Dart" → Install), then restart Android Studio after installing both.
+
+2. Create a new project using **New Flutter Project** -> **Select the Flutter generator from the pane on the left** -> **If asked, enter the path to the Flutter SDK installed on your system** -> **Name your project as: cellular_automaton_zoo**
+3. Copy the provided starter files into place: replace the generated contents of `lib/` with the given `lib/cellular_automaton.dart` and the (empty) `lib/src/` files. There is no `bin/` folder yet — create one yourself at the project root and copy `bin/cellular_automaton.dart` into it.
+
+
+### Installing the Dependencies
+
+The starter code uses the `args` package for the CLI. You will need to add it
+to the project yourself using the `dart pub add` command before being able to compile the application. Furthermore, as a part of grading you will use the `test` package to implement the tests for your project. To install both packages, open the terminal provided by Android Studio and run:
 
 ```
 dart pub add args
 dart pub add dev:test
 ```
 
-Afterward, you can open `pubspec.yaml` to verify both packages were
-added.
 
-### Working in Android Studio
+### Using the CLI
 
-1. Install the **Dart** plugin (Settings/Preferences → Plugins → search
-   "Dart" → Install), then restart Android Studio.
-2. Create a new project: **File → New → Project…**, choose **Dart** in
-   the project type list, and give it a name. Android Studio generates a
-   fresh `pubspec.yaml` and a `lib/` folder for you.
-3. Copy the provided starter files into place: replace the generated
-   contents of `lib/` with the given `lib/cellular_automaton.dart` and
-   the (empty) `lib/src/` files. There is no `bin/` folder yet — create
-   one yourself at the project root and copy `bin/cellular_automaton.dart`
-   into it.
-4. Android Studio shows a "Pub get" banner at the top of the editor
-   whenever `pubspec.yaml` changes; you can click that instead of running
-   `dart pub get` manually.
-5. Use the built-in **Terminal** tool window (View → Tool Windows →
-   Terminal) to run the `dart pub add` commands above, `dart run
-   bin/cellular_automaton.dart ...`, and `dart test`.
-
-Example usage of the provided CLI:
+The provided CLI can be run using the `dart run` command. Several arguments can be passed to it which set the grid size, width, the animation speed and the species of the automatons. As an exmaple you can run:
 
 ```
-dart run bin/cellular_automaton.dart --species=highlife --width=30 --height=15 --generations=100 --fps=8
+dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --generations=100 --fps=8
 ```
 
 ## Deliverables
 
-1. A refined spec of the rough spec above. Spell out the exact signature
-   of every method and mixin, the exact constraint (`on` clause, or lack
-   of one) each mixin requires, and behavior in edge cases — e.g. an
-   out-of-bounds coordinate, or a class attempting to mix in both
-   edge-policy mixins at once. Your refined spec must also answer, in your
-   own words:
-     a. What breaks, and why, if `ColorRenderable` is mixed in before
-        the mixin that provides `render()`, in terms of mixin resolution
-        order.
-     b. What happens if a class mixes in both edge-policy mixins, and why.
+1. A PDF file `spec.pdf` describing your refined spec of the rough spec above. Spell out the exact signature of every method, class and mixin (include the details of using the `on` keyword where required and where it is not). 
+
 2. The Dart code implementing your refined spec, plus tests under `test/`
-   runnable with `dart test`.
-3. screen-recorded video, at most 120 seconds, in which you
-   explain your code and run the program, showing the animation. Include
-   one custom rule beyond the four listed above and run the animation.
-4. A report on your use of LLMs: which LLMs, for what purpose (code
-   generation vs. spec refinement vs. test-case generation), how accurate
-   the results were, and example prompts with the corresponding responses.
+runnable with `dart test`. Some sample tests are given that test the CLI for your reference on how tests are implemented using dart's `test` package.
+
+3. A screen recorded video `tutorial.mp4`, at most 120 seconds. In the video you will code live by adding a new mixin called `CustomRules` to the `rules.dart`. The mixin would be similar to `ConwayRules` but implement a rule of you choice. Then you will modify the `CLI` appropriatly so that the following command will run your custom animation:
+
+```
+dart run bin/cellular_automaton.dart --species=custom --width=30 --height=15 --generations=100 --fps=8
+```
+You will run the command showing your animation and explain the changes you are making as you live code. Additionally, also include explainations of how you track which cells are alive or dead.
+
+4. A report on your use of LLMs `llm-usage.pdf`. You must include the LLM you used, for what purpose(code generation vs. spec refinement vs. test-case generation), how accurate the results were, and example prompts with the corresponding responses.
 
 You are required to use LLMs for this assignment.
 
+
+All the files need to submitted as a `zip` file named as `<firstname>_<lastname>.zip` it should include the following:
+- A folder `cellular_automaton_zoo` which is your android studio project.
+- A file `spec.pdf` with your refined spec.
+- A file `llm-usage.pdf` with your llm report.
+- A video `tutorial.mp4` containing your screen recorded video.
+
+**Make sure you include the latest version of your code post recording the video, we should be able to run your custom animation.**
+
 ## Grading
 
-1. Completeness of your refined spec.
+We encourage you use the suggested file names in your submission as it makes grading easier for us.
+
+1. The completeness of you refined spec.
 2. Code compliance with your refined spec, and correct use of mixins as
-   described above.
-3. Accuracy of your video.
+   described in the project. (Approprate usage of the 'on' keyword)
+3. Accuracy of your video in terms of demonstrating adding the custom rule, and clarity in explaining how you store the state of alive and dead cells.
 4. Ability to use LLMs effectively and assess LLM results.
 
-You must work alone on this project. Your project code should be in a zip
-archive named `xxx_yyy.zip`, where `xxx` and `yyy` are your first and last
-names. The archive may contain your Dart source files in addition to the
-video, refined spec, and LLM report. Submit via the assignment's submit
-link on the Blackboard course website. No late submissions will be
-accepted.
+Submission details are posted on Canvas.
