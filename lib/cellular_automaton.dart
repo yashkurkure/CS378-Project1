@@ -5,8 +5,6 @@ library;
 
 export 'src/cell.dart';
 export 'src/cellular_automaton.dart';
-export 'src/edge_policies.dart';
 export 'src/grid.dart';
 export 'src/rendering.dart';
 export 'src/rules.dart';
-export 'src/stats.dart';

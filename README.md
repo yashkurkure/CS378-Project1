@@ -29,8 +29,7 @@ a dead cell becomes alive if it has exactly 3 neighbors (B3), and a living
 cell stays alive if it has 2 or 3 neighbors (S23). Changing the B/S numbers
 produces different patterns with interesting properties. You may find some rules online and test out if those properties truly hold.
 
-In a 2D gird, each cell has 8 neightbors, except the ones at the border of the grid. Where the corner cells have 3 neightbors and the the cells on the edges have 5. In your implementation you will asume these properties. The following section describes a rough spec you will follow:
-
+In a 2D grid, each cell has 8 neighbors, except the ones at the border of the grid. Where the corner cells have 3 neighbors and the cells on the edges have 5. In your implementation you will assume these properties. The following section describes a rough spec you will follow:
 
 ## Spec
 
@@ -43,15 +42,15 @@ It defines a single constructor with required named parameters `x` and `y`. It m
 3. An abstract subclass `CellularAutomaton extends Grid` which declares
 two abstract methods: (1) `bool nextState(bool currentlyAlive, int liveNeighborCount)` and (2) `String render()`. It also implements one concrete `step()` method that advances the grid to its next state using `neighborsOf` and `nextState`.
 
-4. A mixin `ConwayRules` that implements a single method `bool nextState(bool currentlyAlive, int liveNeighborCount)`. It takes the current state of a cell encoded as a boolean (true for alive and false for dead) and the count of neighbors which are alive. Based on these values the method returns a boolean indicating whether the cell should stay alive (true) or die (false) in the next timestemp.
+4. A mixin `ConwayRules` that implements a single method `bool nextState(bool currentlyAlive, int liveNeighborCount)`. It takes the current state of a cell encoded as a boolean (true for alive and false for dead) and the count of neighbors which are alive. Based on these values the method returns a boolean indicating whether the cell should stay alive (true) or die (false) in the next timestep.
 
-5. A mixin `AsciiRenderable` that has access to the members of the `Grid` class allowing it to access the sate of the baord (HINT: using the `on` keyword). It implements a single `String render()` method which returns a string of characters represnting the cells of the grid. Use `#` for alive cells and `.` for dead cells. Make sure newlines are inserted at appropriate places in the string.
+5. A mixin `AsciiRenderable` that has access to the members of the `Grid` class allowing it to access the state of the board (HINT: using the `on` keyword). It implements a single `String render()` method which returns a string of characters representing the cells of the grid. Use `#` for alive cells and `.` for dead cells. Make sure newlines are inserted at appropriate places in the string.
 
-6. A mixin `DecoratedRenderable` that has access to the members of `CellularAutomaton` class (HINT: using the `on` keyword). It implements a single `String render()`method, however it overrides the default `render()` methods and uses the `super` keyword to retrive the raw string representing the baord. It then modfies this string by adding a border to the grid using `|` and `-` characters.
+6. A mixin `DecoratedRenderable` that has access to the members of `CellularAutomaton` class (HINT: using the `on` keyword). It implements a single `String render()` method, however it overrides the default `render()` methods and uses the `super` keyword to retrieve the raw string representing the board. It then modifies this string by adding a border to the grid using `|` and `-` characters.
 
-7. You must also imeplement error handling where ever necessary. For example: If your Grid class contains an `isAlive(Cell cell)` method to get the state of a cell, a error must be thrown if the cell does not exist on the grid.
+7. You must also implement error handling wherever necessary. For example: If your Grid class contains an `isAlive(Cell cell)` method to get the state of a cell, an error must be thrown if the cell does not exist on the grid.
 
-Given that you have implemented this Spec, some starter code is offered to you which imeplements a command line interface and code to animate the baord onto the command line described below and avaiable in the repository under the `\bin` and `lib` folders.
+Given that you have implemented this Spec, some starter code is offered to you which implements a command line interface and code to animate the board onto the command line described below and available in the repository under the `bin` and `lib` folders.
 
 ## Starter code
 
@@ -73,7 +72,6 @@ You are given two things:
 2. Create a new project using **New Flutter Project** -> **Select the Flutter generator from the pane on the left** -> **If asked, enter the path to the Flutter SDK installed on your system** -> **Name your project as: cellular_automaton_zoo**
 3. Copy the provided starter files into place: replace the generated contents of `lib/` with the given `lib/cellular_automaton.dart` and the (empty) `lib/src/` files. There is no `bin/` folder yet — create one yourself at the project root and copy `bin/cellular_automaton.dart` into it.
 
-
 ### Installing the Dependencies
 
 The starter code uses the `args` package for the CLI. You will need to add it
@@ -84,10 +82,9 @@ dart pub add args
 dart pub add dev:test
 ```
 
-
 ### Using the CLI
 
-The provided CLI can be run using the `dart run` command. Several arguments can be passed to it which set the grid size, width, the animation speed and the species of the automatons. As an exmaple you can run:
+The provided CLI can be run using the `dart run` command. Several arguments can be passed to it which set the grid size, width, the animation speed and the species of the automatons. As an example you can run:
 
 ```
 dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --generations=100 --fps=8
@@ -95,24 +92,23 @@ dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --g
 
 ## Deliverables
 
-1. A PDF file `spec.pdf` describing your refined spec of the rough spec above. Spell out the exact signature of every method, class and mixin (include the details of using the `on` keyword where required and where it is not). 
+1. A PDF file `spec.pdf` describing your refined spec of the rough spec above. Spell out the exact signature of every method, class and mixin (include the details of using the `on` keyword where required and where it is not).
 
 2. The Dart code implementing your refined spec, plus tests under `test/`
 runnable with `dart test`. Some sample tests are given that test the CLI for your reference on how tests are implemented using dart's `test` package.
 
-3. A screen recorded video `tutorial.mp4`, at most 120 seconds. In the video you will code live by adding a new mixin called `CustomRules` to the `rules.dart`. The mixin would be similar to `ConwayRules` but implement a rule of you choice. Then you will modify the `CLI` appropriatly so that the following command will run your custom animation:
+3. A screen recorded video `tutorial.mp4`, at most 120 seconds. In the video you will code live by adding a new mixin called `CustomRules` to the `rules.dart`. The mixin would be similar to `ConwayRules` but implement a rule of your choice. Then you will modify the `CLI` appropriately so that the following command will run your custom animation:
 
 ```
 dart run bin/cellular_automaton.dart --species=custom --width=30 --height=15 --generations=100 --fps=8
 ```
-You will run the command showing your animation and explain the changes you are making as you live code. Additionally, also include explainations of how you track which cells are alive or dead.
+You will run the command showing your animation and explain the changes you are making as you live code. Additionally, also include explanations of how you track which cells are alive or dead.
 
 4. A report on your use of LLMs `llm-usage.pdf`. You must include the LLM you used, for what purpose(code generation vs. spec refinement vs. test-case generation), how accurate the results were, and example prompts with the corresponding responses.
 
 You are required to use LLMs for this assignment.
 
-
-All the files need to submitted as a `zip` file named as `<firstname>_<lastname>.zip` it should include the following:
+All the files need to be submitted as a `zip` file named as `<firstname>_<lastname>.zip` it should include the following:
 - A folder `cellular_automaton_zoo` which is your android studio project.
 - A file `spec.pdf` with your refined spec.
 - A file `llm-usage.pdf` with your llm report.
@@ -124,9 +120,9 @@ All the files need to submitted as a `zip` file named as `<firstname>_<lastname>
 
 We encourage you use the suggested file names in your submission as it makes grading easier for us.
 
-1. The completeness of you refined spec.
+1. The completeness of your refined spec.
 2. Code compliance with your refined spec, and correct use of mixins as
-   described in the project. (Approprate usage of the 'on' keyword)
+   described in the project. (Appropriate usage of the 'on' keyword)
 3. Accuracy of your video in terms of demonstrating adding the custom rule, and clarity in explaining how you store the state of alive and dead cells.
 4. Ability to use LLMs effectively and assess LLM results.
 

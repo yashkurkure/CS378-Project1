@@ -6,24 +6,9 @@ import 'package:cellular_automaton/cellular_automaton.dart';
 
 /// Each "species" is a concrete mixin composition — this is the payoff
 /// line students write themselves: which mixins, in which order.
-class ConwayToroidal extends CellularAutomaton
-    with ToroidalEdges, ConwayRules, AsciiRenderable, ColorRenderable, Trackable {
-  ConwayToroidal(super.width, super.height);
-}
-
-class HighLifeWalled extends CellularAutomaton
-    with WalledEdges, HighLifeRules, AsciiRenderable, ColorRenderable, Trackable {
-  HighLifeWalled(super.width, super.height);
-}
-
-class DayAndNightToroidal extends CellularAutomaton
-    with ToroidalEdges, DayAndNightRules, AsciiRenderable, ColorRenderable, Trackable {
-  DayAndNightToroidal(super.width, super.height);
-}
-
-class SeedsWalled extends CellularAutomaton
-    with WalledEdges, SeedsRules, AsciiRenderable, ColorRenderable, Trackable {
-  SeedsWalled(super.width, super.height);
+class Conway extends CellularAutomaton
+    with ConwayRules, AsciiRenderable, DecoratedRenderable {
+  Conway(super.width, super.height);
 }
 
 /// Reproducible on this machine for this student, different elsewhere.
@@ -31,18 +16,13 @@ int _seedForThisMachine(String studentId) =>
     (Platform.localHostname + studentId).hashCode & 0x7fffffff;
 
 CellularAutomaton _buildSpecies(String name, int w, int h) => switch (name) {
-      'conway' => ConwayToroidal(w, h),
-      'highlife' => HighLifeWalled(w, h),
-      'daynight' => DayAndNightToroidal(w, h),
-      'seeds' => SeedsWalled(w, h),
+      'conway' => Conway(w, h),
       _ => throw ArgumentError('Unknown species: $name'),
     };
 
 Future<void> main(List<String> arguments) async {
   final parser = ArgParser()
-    ..addOption('species',
-        defaultsTo: 'conway',
-        allowed: ['conway', 'highlife', 'daynight', 'seeds'])
+    ..addOption('species', defaultsTo: 'conway', allowed: ['conway'])
     ..addOption('student', defaultsTo: Platform.environment['USER'] ?? 'anon')
     ..addOption('width', defaultsTo: '40')
     ..addOption('height', defaultsTo: '20')
