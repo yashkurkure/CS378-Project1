@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:cellular_automaton/cellular_automaton.dart';
+import 'package:cellular_automaton_zoo/cellular_automaton_zoo.dart';
 
 /// Each "species" is a concrete mixin composition — this is the payoff
 /// line students write themselves: which mixins, in which order.
