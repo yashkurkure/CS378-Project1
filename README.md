@@ -112,3 +112,7 @@ Here is some advice Claude has for you:
 10. **`--species=custom` needs two changes in `bin/main.dart`.** Add `'custom'` to the `allowed` list of the `species` option, and add a new class composing your `CustomRules` mixin with the rendering mixins, plus a matching line in the `switch`. Without both, the CLI rejects the species.
 11. **You only need to read `bin/main.dart`, not master it.** It uses some Dart features (`switch` expressions, `async`/`await`) that are beyond this project. Focus on the class at the top that composes the mixins, which is the part that matters here.
 12. **Test your rules by hand.** Set up a small pattern, such as three live cells in a row (a "blinker"), and check that it flips between horizontal and vertical each step. This catches most bugs in `step()` and `nextState`.
+
+---
+
+(c) Yash Kurkure, University of Illinois Chicago
