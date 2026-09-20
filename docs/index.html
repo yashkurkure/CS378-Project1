@@ -13,6 +13,7 @@
   main { max-width:760px; margin:0 auto; padding:48px 16px; }
   h1 { margin:0 0 4px; font-size:2rem; }
   h2 { margin-top:2.2rem; border-bottom:1px solid var(--border); padding-bottom:6px; }
+  ol, ul { padding-left:1.4em; }
   .sub { color:var(--muted); margin:0 0 24px; }
   a { color:var(--accent); }
   img { max-width:100%; border:1px solid var(--border); border-radius:6px; }
@@ -24,37 +25,133 @@
 </head>
 <body>
 <main>
-  <h1>Cellular Automaton Zoo</h1>
-  <p class="sub">CS378 Project 1 · a Dart cellular automaton simulator built with classes and mixins</p>
-
-  <img src="cellular_automaton.gif" alt="Conway's Game of Life animation">
-
-  <h2>What it is</h2>
-  <p>A grid of cells that are alive or dead and change over discrete time steps
-  by following local rules. The default rule is Conway's Game of Life
-  (<strong>B3/S23</strong>): a dead cell with exactly 3 live neighbors is born,
-  and a live cell with 2 or 3 live neighbors survives. Changing the B/S numbers
-  produces different behavior.</p>
-
-  <h2>Design</h2>
-  <ul>
-    <li><code>Grid</code> and <code>Cell</code>: board state and cell coordinates, with bounds checking.</li>
-    <li><code>CellularAutomaton</code>: abstract subclass of <code>Grid</code> with <code>step()</code>, <code>nextState()</code> and <code>render()</code>.</li>
-    <li><code>ConwayRules</code>: mixin implementing the B3/S23 rule.</li>
-    <li><code>AsciiRenderable</code> and <code>DecoratedRenderable</code>: mixins for plain and bordered output, using <code>on</code> constraints.</li>
-  </ul>
-
-  <h2>Run it</h2>
-  <pre><code>dart pub add args
-dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --generations=100 --fps=8</code></pre>
-
-  <h2>Get the starter code</h2>
-  <p>The starter code (the CLI plus empty <code>lib/src/</code> stubs) lives on GitHub:</p>
-  <ul>
-    <li><a href="https://github.com/yashkurkure/CS378-Project1">Repository: github.com/yashkurkure/CS378-Project1</a></li>
-    <li><a href="https://github.com/yashkurkure/CS378-Project1/archive/refs/heads/master.zip">Download as a .zip</a></li>
-  </ul>
-  <pre><code>git clone https://github.com/yashkurkure/CS378-Project1.git</code></pre>
+  <p class="sub">CS378 Project 1 · <a href="https://github.com/yashkurkure/CS378-Project1">Get the starter code on GitHub</a></p>
+<h1>Dart Project: Cellular Automaton Zoo</h1>
+<p>In this project you will build a Dart application simulating cellular
+automata. A cellular automaton is a grid of individual cells that change
+state over discrete time steps by following a simple set of local rules.
+Below is an example of what one may look like:</p>
+<p><img alt="Cellular automaton animation" src="cellular_automaton.gif" /></p>
+<p>In the 2D grid, each cell is either alive or dead. In the animation above,
+a cell is colored black if alive and white if dead. Simple rules like the
+following govern the animation:</p>
+<ol>
+<li>Any live cell with fewer than two live neighbors dies (as if by
+   loneliness).</li>
+<li>Any live cell with two or three live neighbors lives on to the next
+   generation.</li>
+<li>Any live cell with more than three live neighbors dies (as if by
+   overcrowding).</li>
+<li>Any dead cell with exactly three live neighbors becomes alive (as if by
+   reproduction).</li>
+</ol>
+<p>This is also called the <a href="https://youtu.be/R9Plq-D1gEk?si=x4bpcwctv4KS1e9b">Conway's Game of Life</a> devised by the mathematician John Conway.</p>
+<p>At each timestep, the program iterates over the grid and computes the next
+state based on the rules above. The rules can also be denoted with the
+shorthand <strong>B3/S23</strong>, where B stands for Birth and S stands for Survival:
+a dead cell becomes alive if it has exactly 3 neighbors (B3), and a living
+cell stays alive if it has 2 or 3 neighbors (S23). Changing the B/S numbers
+produces different patterns with interesting properties. You may find some rules online and test out if those properties truly hold.</p>
+<p>In a 2D grid, each cell has 8 neighbors, except the ones at the border of the grid. Where the corner cells have 3 neighbors and the cells on the edges have 5. In your implementation you will assume these properties. The following section describes a rough spec you will follow:</p>
+<h2>Spec</h2>
+<ol>
+<li>
+<p>A class <code>Grid</code> holds a rectangular board of alive/dead cells. It defines
+a single constructor with required named parameters <code>width</code> and <code>height</code>. This class is responsible for the board's state at each timestep; the internal data structures used to track which cells are alive are up to you. It should also include a getter method <code>get population</code> which returns the count of cells that are alive.</p>
+</li>
+<li>
+<p>A class <code>Cell</code> that encodes the coordinates of a cell within the grid.
+It defines a single constructor with required named parameters <code>x</code> and <code>y</code>. It must override <code>==</code> so cells can be compared, and should override <code>hashCode</code> if you use a <code>Set</code> or <code>Map</code> to track alive cells.</p>
+</li>
+<li>
+<p>An abstract subclass <code>CellularAutomaton extends Grid</code> which declares
+two abstract methods: (1) <code>bool nextState(bool currentlyAlive, int liveNeighborCount)</code> and (2) <code>String render()</code>. It also implements one concrete <code>step()</code> method that advances the grid to its next state using <code>neighborsOf</code> and <code>nextState</code>.</p>
+</li>
+<li>
+<p>A mixin <code>ConwayRules</code> that implements a single method <code>bool nextState(bool currentlyAlive, int liveNeighborCount)</code>. It takes the current state of a cell encoded as a boolean (true for alive and false for dead) and the count of neighbors which are alive. Based on these values the method returns a boolean indicating whether the cell should stay alive (true) or die (false) in the next timestep.</p>
+</li>
+<li>
+<p>A mixin <code>AsciiRenderable</code> that has access to the members of the <code>Grid</code> class allowing it to access the state of the board (HINT: using the <code>on</code> keyword). It implements a single <code>String render()</code> method which returns a string of characters representing the cells of the grid. Use <code>#</code> for alive cells and <code>.</code> for dead cells. Make sure newlines are inserted at appropriate places in the string.</p>
+</li>
+<li>
+<p>A mixin <code>DecoratedRenderable</code> that has access to the members of <code>CellularAutomaton</code> class (HINT: using the <code>on</code> keyword). It implements a single <code>String render()</code> method, however it overrides the default <code>render()</code> methods and uses the <code>super</code> keyword to retrieve the raw string representing the board. It then modifies this string by adding a border to the grid using <code>|</code> and <code>-</code> characters.</p>
+</li>
+<li>
+<p>You must also implement error handling wherever necessary. For example: If your Grid class contains an <code>isAlive(Cell cell)</code> method to get the state of a cell, an error must be thrown if the cell does not exist on the grid.</p>
+</li>
+</ol>
+<p>Given that you have implemented this Spec, some starter code is offered to you which implements a command line interface and code to animate the board onto the command line described below and available in the repository under the <code>bin</code> and <code>lib</code> folders.</p>
+<h2>Starter code</h2>
+<p>You are given two things:</p>
+<ul>
+<li>
+<p><code>lib/cellular_automaton.dart</code>, a barrel file that exports every
+  file under <code>lib/src/</code> (<code>grid.dart</code>, <code>cell.dart</code>,
+  <code>cellular_automaton.dart</code>, <code>rules.dart</code>,
+  <code>rendering.dart</code>). Each of the files under <code>lib/src/</code> is completely
+  empty and implementing every class and mixin in them, per the spec
+  above, is your job.</p>
+</li>
+<li>
+<p><code>bin/cellular_automaton.dart</code>, contains a complete command line application (CLI) and an example of how the classes and mixins you write come together. You should not need to modify this file — but it also won't compile until the classes and mixins it references actually exist in <code>lib/src/</code>.</p>
+</li>
+</ul>
+<h3>Working in Android Studio</h3>
+<ol>
+<li>
+<p>Install the <strong>Dart</strong> and <strong>Flutter</strong> plugins (Example: Settings/Preferences → Plugins → search "Dart" → Install), then restart Android Studio after installing both.</p>
+</li>
+<li>
+<p>Create a new project using <strong>New Flutter Project</strong> -&gt; <strong>Select the Flutter generator from the pane on the left</strong> -&gt; <strong>If asked, enter the path to the Flutter SDK installed on your system</strong> -&gt; <strong>Name your project as: cellular_automaton_zoo</strong></p>
+</li>
+<li>Copy the provided starter files into place: replace the generated contents of <code>lib/</code> with the given <code>lib/cellular_automaton.dart</code> and the (empty) <code>lib/src/</code> files. There is no <code>bin/</code> folder yet — create one yourself at the project root and copy <code>bin/cellular_automaton.dart</code> into it.</li>
+</ol>
+<h3>Installing the Dependencies</h3>
+<p>The starter code uses the <code>args</code> package for the CLI. You will need to add it
+to the project yourself using the <code>dart pub add</code> command before being able to compile the application. Furthermore, as a part of grading you will use the <code>test</code> package to implement the tests for your project. To install both packages, open the terminal provided by Android Studio and run:</p>
+<pre><code>dart pub add args
+dart pub add dev:test
+</code></pre>
+<h3>Using the CLI</h3>
+<p>The provided CLI can be run using the <code>dart run</code> command. Several arguments can be passed to it which set the grid size, width, the animation speed and the species of the automatons. As an example you can run:</p>
+<pre><code>dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --generations=100 --fps=8
+</code></pre>
+<h2>Deliverables</h2>
+<ol>
+<li>
+<p>A PDF file <code>spec.pdf</code> describing your refined spec of the rough spec above. Spell out the exact signature of every method, class and mixin (include the details of using the <code>on</code> keyword where required and where it is not).</p>
+</li>
+<li>
+<p>The Dart code implementing your refined spec, plus tests under <code>test/</code>
+runnable with <code>dart test</code>. Some sample tests are given that test the CLI for your reference on how tests are implemented using dart's <code>test</code> package.</p>
+</li>
+<li>
+<p>A screen recorded video <code>tutorial.mp4</code>, at most 120 seconds. In the video you will code live by adding a new mixin called <code>CustomRules</code> to the <code>rules.dart</code>. The mixin would be similar to <code>ConwayRules</code> but implement a rule of your choice. Then you will modify the <code>CLI</code> appropriately so that the following command will run your custom animation:</p>
+</li>
+</ol>
+<pre><code>dart run bin/cellular_automaton.dart --species=custom --width=30 --height=15 --generations=100 --fps=8
+</code></pre>
+<p>You will run the command showing your animation and explain the changes you are making as you live code. Additionally, also include explanations of how you track which cells are alive or dead.</p>
+<ol start="4">
+<li>A report on your use of LLMs <code>llm-usage.pdf</code>. You must include the LLM you used, for what purpose(code generation vs. spec refinement vs. test-case generation), how accurate the results were, and example prompts with the corresponding responses.</li>
+</ol>
+<p>You are required to use LLMs for this assignment.</p>
+<p>All the files need to be submitted as a <code>zip</code> file named as <code>&lt;firstname&gt;_&lt;lastname&gt;.zip</code> it should include the following:
+- A folder <code>cellular_automaton_zoo</code> which is your android studio project.
+- A file <code>spec.pdf</code> with your refined spec.
+- A file <code>llm-usage.pdf</code> with your llm report.
+- A video <code>tutorial.mp4</code> containing your screen recorded video.</p>
+<p><strong>Make sure you include the latest version of your code post recording the video, we should be able to run your custom animation.</strong></p>
+<h2>Grading</h2>
+<p>We encourage you use the suggested file names in your submission as it makes grading easier for us.</p>
+<ol>
+<li>The completeness of your refined spec.</li>
+<li>Code compliance with your refined spec, and correct use of mixins as
+   described in the project. (Appropriate usage of the 'on' keyword)</li>
+<li>Accuracy of your video in terms of demonstrating adding the custom rule, and clarity in explaining how you store the state of alive and dead cells.</li>
+<li>Ability to use LLMs effectively and assess LLM results.</li>
+</ol>
+<p>Submission details are posted on Canvas.</p>
 </main>
 </body>
 </html>
