@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cellular Automaton Zoo</title>
+<style>
+  :root { --bg:#fff; --fg:#1b1f24; --muted:#59636e; --accent:#0969da; --code:#f6f8fa; --border:#d1d9e0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --accent:#4493f8; --code:#151b23; --border:#3d444d; }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:48px 16px; }
+  h1 { margin:0 0 4px; font-size:2rem; }
+  h2 { margin-top:2.2rem; border-bottom:1px solid var(--border); padding-bottom:6px; }
+  .sub { color:var(--muted); margin:0 0 24px; }
+  a { color:var(--accent); }
+  img { max-width:100%; border:1px solid var(--border); border-radius:6px; }
+  pre, code { background:var(--code); border-radius:6px; font-family:ui-monospace, monospace; }
+  code { padding:2px 5px; font-size:.9em; }
+  pre { padding:12px 14px; overflow-x:auto; }
+  pre code { padding:0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Cellular Automaton Zoo</h1>
+  <p class="sub">CS378 Project 1 · a Dart cellular automaton simulator built with classes and mixins</p>
+
+  <img src="cellular_automaton.gif" alt="Conway's Game of Life animation">
+
+  <h2>What it is</h2>
+  <p>A grid of cells that are alive or dead and change over discrete time steps
+  by following local rules. The default rule is Conway's Game of Life
+  (<strong>B3/S23</strong>): a dead cell with exactly 3 live neighbors is born,
+  and a live cell with 2 or 3 live neighbors survives. Changing the B/S numbers
+  produces different behavior.</p>
+
+  <h2>Design</h2>
+  <ul>
+    <li><code>Grid</code> and <code>Cell</code>: board state and cell coordinates, with bounds checking.</li>
+    <li><code>CellularAutomaton</code>: abstract subclass of <code>Grid</code> with <code>step()</code>, <code>nextState()</code> and <code>render()</code>.</li>
+    <li><code>ConwayRules</code>: mixin implementing the B3/S23 rule.</li>
+    <li><code>AsciiRenderable</code> and <code>DecoratedRenderable</code>: mixins for plain and bordered output, using <code>on</code> constraints.</li>
+  </ul>
+
+  <h2>Run it</h2>
+  <pre><code>dart pub add args
+dart run bin/cellular_automaton.dart --species=conway --width=30 --height=15 --generations=100 --fps=8</code></pre>
+
+  <h2>Get the starter code</h2>
+  <p>The starter code (the CLI plus empty <code>lib/src/</code> stubs) lives on GitHub:</p>
+  <ul>
+    <li><a href="https://github.com/yashkurkure/CS378-Project1">Repository: github.com/yashkurkure/CS378-Project1</a></li>
+    <li><a href="https://github.com/yashkurkure/CS378-Project1/archive/refs/heads/master.zip">Download as a .zip</a></li>
+  </ul>
+  <pre><code>git clone https://github.com/yashkurkure/CS378-Project1.git</code></pre>
+</main>
+</body>
+</html>
