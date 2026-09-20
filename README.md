@@ -52,9 +52,9 @@ You are given three things:
 
 1. Install the **Dart** and **Flutter** plugins (Example: Settings/Preferences → Plugins → search "Dart" → Install), then restart Android Studio after installing both.
 
-2. Create a new project using **New Flutter Project** -> **Select the Dart generator from the pane on the left** -> **If asked, enter the path to the Dart SDK installed on your system** -> **Name your project as: cellular_automaton_zoo**
+2. Create a new project using New Flutter Project → Select the Dart generator from the pane on the left → If asked, enter the path to the Dart SDK installed on your system → **Name your project as: cellular_automaton_zoo**
 
-3. Copy the provided starter files into place: replace the generated contents of `lib/` with the given `lib/cellular_automaton_zo.dart` and the (empty) `lib/src/` files. There is no `bin/` folder yet — create one yourself at the project root and copy `bin/main.dart` into it.
+3. Copy the provided starter files into place: replace the generated contents of `lib/` with the given `lib/cellular_automaton_zoo.dart` and the (empty) `lib/src/` files. There is no `bin/` folder yet — create one yourself at the project root and copy `bin/main.dart` into it.
 
 ### Installing the Dependencies
 The starter code uses the `args` package for the CLI. You will need to add it to the project yourself using the `dart pub add` command using the terminal as follows:
@@ -94,3 +94,20 @@ We encourage you use the suggested file names in your submission as it makes gra
 4. Ability to use LLMs effectively and assess LLM results.
 
 Submission details are posted on Canvas.
+
+## Some Advice
+
+Here is some advice Claude has for you:
+
+1. **Order of mixins matters.** In `with ConwayRules, AsciiRenderable, DecoratedRenderable`, mixins are applied left to right. `DecoratedRenderable` calls `super.render()`, so something that already provides `render()` (such as `AsciiRenderable`) must come *before* it. Swapping them produces a confusing compile error.
+2. **`_private` means private to the file, not the class.** A member starting with `_` in `grid.dart` cannot be used from `cellular_automaton.dart` or `rendering.dart`. If other files need to read or change the board, give `Grid` public methods for it.
+3. **Do not update the board while you are scanning it.** If you change a cell and then count the neighbors of the next cell, you are reading a half-updated board and the patterns come out wrong. Work out every cell's next state first, and only then apply them all.
+4. **No wrap-around.** The edges of the grid are walls, not portals. Cells outside the grid do not count as neighbors, which is why a corner has 3 neighbors and an edge cell has 5.
+5. **Trailing newline in `render()`.** If every row ends with `\n`, then `split('\n')` gives you an extra empty string at the end. Skip it or you will draw a stray empty row inside the border.
+6. **`==` and `hashCode` go together.** Override both in `Cell`, using the same fields. `Object.hash(x, y)` is an easy way to write `hashCode`.
+7. **The starting board must have live cells.** With a very small grid, random generation can produce an all-dead board, which never changes. Make sure at least one cell is alive.
+8. **Validate your inputs.** Check for a cell outside the grid in `isAlive` and anywhere else a `Cell` is used to access the board. Also consider what a `width` or `height` of 0 or a negative number should do.
+9. **Same seed, same board.** Create one `Random(seed)` and reuse it. Do not create a new `Random(seed)` for every cell, or every cell will get the same value.
+10. **`--species=custom` needs two changes in `bin/main.dart`.** Add `'custom'` to the `allowed` list of the `species` option, and add a new class composing your `CustomRules` mixin with the rendering mixins, plus a matching line in the `switch`. Without both, the CLI rejects the species.
+11. **You only need to read `bin/main.dart`, not master it.** It uses some Dart features (`switch` expressions, `async`/`await`) that are beyond this project. Focus on the class at the top that composes the mixins, which is the part that matters here.
+12. **Test your rules by hand.** Set up a small pattern, such as three live cells in a row (a "blinker"), and check that it flips between horizontal and vertical each step. This catches most bugs in `step()` and `nextState`.
