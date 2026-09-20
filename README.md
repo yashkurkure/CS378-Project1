@@ -2,6 +2,7 @@
   In this project you will build a Dart application simulating cellular automata. A cellular automaton is a grid of individual cells that change state over discrete time steps by following a simple set of local rules.
 
 Below is an example of what one may look like:
+
 ![Automaton Image](cellular_automaton.gif)
   
 
