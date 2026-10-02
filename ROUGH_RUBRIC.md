@@ -47,14 +47,3 @@ This rubric expands the four grading criteria listed in the README.
 | 4 | Includes example prompts with the actual responses |
 | 6 | Critically evaluates the output: where the LLM was wrong, and how the student caught and fixed it |
 | 2 | Gives an honest account of how much they relied on the LLM |
-
-## Packaging deductions
-
-Deduct for a wrong zip name or file names, missing files, or a project that does not open.
-
-## Grading notes
-
-- The spec requires no method for placing cells, and students can fill the random board in any order. Automated tests can only rely on the constructor, `population`, `generation`, `step()`, `render()`, and `nextState`. Two ways to test with only those:
-  - Test `nextState` across all 18 inputs (alive or dead, 0-8 live neighbors).
-  - Parse `render()`, compute the next Conway generation independently, call `step()`, and compare. Also check that `population` equals the number of `#` characters.
-- The border format (corner characters, padding) is not defined in the spec, so grade it loosely.
