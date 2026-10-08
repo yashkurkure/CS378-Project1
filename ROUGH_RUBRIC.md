@@ -6,8 +6,8 @@ This rubric expands the four grading criteria listed in the README.
 
 | Pts | Criterion |
 |---|---|
-| 5 | Exact signatures for every class and mixin: `Grid({required int width, required int height, required int seed})`, `get population`, `Cell({required x, required y})`, `==`/`hashCode`, `nextState`, `render`, `step`, `generation` |
-| 2 | States where `on` is used and why: `AsciiRenderable on Grid`, `DecoratedRenderable on CellularAutomaton`, and `ConwayRules` needs no `on`. Explains why the mixin order matters |
+| 5 | Exact signatures for every class and mixin in the student's code|
+| 2 | States where `on` is used and why: `AsciiRenderable on Grid`, `DecoratedRenderable on CellularAutomaton`, and `ConwayRules` need no `on`. Explains why the mixin order matters |
 | 1 | Defines edge cases: neighbors at edges and corners (no wrap-around), invalid width/height, out-of-bounds access, at least one cell alive at the start |
 | 1 | Defines the `render()` output: `#` and `.`, where newlines go, and the border characters |
 | 1 | Describes how the board is stored and how it is updated (compute the full next state first, then apply it) |
