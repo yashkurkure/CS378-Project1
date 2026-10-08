@@ -47,3 +47,11 @@ This rubric expands the four grading criteria listed in the README.
 | 4 | Includes example prompts with the actual responses |
 | 6 | Critically evaluates the output: where the LLM was wrong, and how the student caught and fixed it |
 | 2 | Gives an honest account of how much they relied on the LLM |
+
+## 4. Late Penalty
+| Pts | Criterion |
+|---|---|
+| -5% | More than 1 Hr late |
+| -10% | More than 12 Hrs late |
+| -20% | More than 24 Hrs late |
+| -100% | More than 48 Hrs late |
